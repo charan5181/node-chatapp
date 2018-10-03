@@ -52,15 +52,25 @@ io.on('connection', (socket) => {
 
   //listener
   socket.on('createmessage', (message, callback) => {
-    console.log(message);
+    var user = users.getUser(socket.id);
+
+      if(user && isRealString(message.text)){
+        io.to(user.room).emit('newmessage', generatemessage(user.name, message.text));
+      }
+
+
     //io.emit will send data to all users & socket.emit to particular user
-    io.emit('newmessage', generatemessage(message.from, message.text));
     callback();
 
   });
 
   socket.on('createlocationmessage', (coords) => {
-    io.emit('newlocationmessage', generatelocationmessage('Admin', coords.latitude, coords.longitude))
+    var user = users.getUser(socket.id);
+
+    if(user){
+      io.to(user.room).emit('newlocationmessage', generatelocationmessage(user.name, coords.latitude, coords.longitude));
+    }
+    
   });
 
   socket.on('disconnect', () => {

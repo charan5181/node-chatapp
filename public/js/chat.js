@@ -82,7 +82,6 @@ jQuery('#message-form').on('submit', function(e) {
 
   var namemessageset = jQuery('[name=message]');
   socket.emit('createmessage', {
-    from: 'User',
     text: namemessageset.val()
   }, function(data) {
     console.log('got it from server', data);
